@@ -1,10 +1,11 @@
 // importação de dependência(s)
-
+import express from "express"
 
 // variáveis globais deste módulo
 const PORT = 3000
 const db = {}
-
+const app = express(); 
+const clientDir = "/home/negreiros/workdir/cefet/8periodo/web/cefet-web-geiser/client";
 
 // carregar "banco de dados" (data/jogadores.json e data/jogosPorJogador.json)
 // você pode colocar o conteúdo dos arquivos json no objeto "db" logo abaixo
@@ -37,7 +38,11 @@ const db = {}
 // EXERCÍCIO 1
 // configurar para servir os arquivos estáticos da pasta "client"
 // dica: 1 linha de código
-
+app.use(express.static(`${clientDir}`));
 
 // abrir servidor na porta 3000 (constante PORT)
 // dica: 1-3 linhas de código
+app.listen(3000, () => {
+    console.log("Listening in: http://localhost:3000");
+ })
+
