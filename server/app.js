@@ -1,23 +1,24 @@
 // importação de dependência(s)
 import express from "express"
+import { readFile } from "fs/promises"
+import hbs from "hbs"
 
 // variáveis globais deste módulo
 const PORT = 3000
 const db = {}
 const app = express(); 
-const clientDir = "/home/negreiros/workdir/cefet/8periodo/web/cefet-web-geiser/client";
+const clientDir = "./client";
 
 // carregar "banco de dados" (data/jogadores.json e data/jogosPorJogador.json)
 // você pode colocar o conteúdo dos arquivos json no objeto "db" logo abaixo
 // dica: 1-4 linhas de código (você deve usar o módulo de filesystem (fs))
-
-
-
+db.jogadores = JSON.parse(await readFile("./server/data/jogadores.json"));
+db.jogosPorJogador = JSON.parse(await readFile("./server/data/jogosPorJogador.json"));
 
 // configurar qual templating engine usar. Sugestão: hbs (handlebars)
-//app.set('view engine', '???qual-templating-engine???');
-//app.set('views', '???caminho-ate-pasta???');
 // dica: 2 linhas
+app.set("view engine", "hbs");
+app.set("views", "./server/views");
 
 
 // EXERCÍCIO 2
@@ -25,6 +26,10 @@ const clientDir = "/home/negreiros/workdir/cefet/8periodo/web/cefet-web-geiser/c
 // dados do banco de dados "data/jogadores.json" com a lista de jogadores
 // dica: o handler desta função é bem simples - basta passar para o template
 //       os dados do arquivo data/jogadores.json (~3 linhas)
+app.get("/", function(request, response) {
+    console.log(db)
+    response.render("index", db);     
+});
 
 
 
