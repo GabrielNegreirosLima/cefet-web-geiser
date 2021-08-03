@@ -27,7 +27,6 @@ app.set("views", "./server/views");
 // dica: o handler desta função é bem simples - basta passar para o template
 //       os dados do arquivo data/jogadores.json (~3 linhas)
 app.get("/", function(request, response) {
-    console.log(db)
     response.render("index", db);     
 });
 
@@ -38,6 +37,16 @@ app.get("/", function(request, response) {
 // jogador, usando os dados do banco de dados "data/jogadores.json" e
 // "data/jogosPorJogador.json", assim como alguns campos calculados
 // dica: o handler desta função pode chegar a ter ~15 linhas de código
+app.get("/jogador/:id", function(request, response) {
+    const profile = db.jogadores.players.filter(player => {
+        return player.steamid === request.params.id;
+    });
+    const gameInfo = db.jogosPorJogador[request.params.id];
+    gameInfo.games.sort((a, b) => b.playtime_forever - a.playtime_forever);
+    //console.log(gameInfo.games[0], gameInfo.games[1], gameInfo.games[30])
+
+    response.render("jogosPorJogador", db);     
+});
 
 
 // EXERCÍCIO 1
