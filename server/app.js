@@ -40,12 +40,21 @@ app.get("/", function(request, response) {
 app.get("/jogador/:id", function(request, response) {
     const profile = db.jogadores.players.filter(player => {
         return player.steamid === request.params.id;
-    });
-    const gameInfo = db.jogosPorJogador[request.params.id];
-    gameInfo.games.sort((a, b) => b.playtime_forever - a.playtime_forever);
-    //console.log(gameInfo.games[0], gameInfo.games[1], gameInfo.games[30])
+    })[0];
 
-    response.render("jogosPorJogador", db);     
+    const gameInfo = db.jogosPorJogador[request.params.id];
+    gameInfo.not_played = 0;
+    gameInfo.games.sort((a, b) => b.playtime_forever - a.playtime_forever);
+    gameInfo.games.forEach( game => {
+        if(game.playtime_forever === 0){
+            gameInfo.not_played += 1;
+            return;
+        }
+        game.playtime_forever = (game.playtime_forever/60.0).toFixed(0);
+    });
+
+    const favoriteGame = gameInfo.games[0];
+    response.render("jogador", { profile, gameInfo, favoriteGame });     
 });
 
 
